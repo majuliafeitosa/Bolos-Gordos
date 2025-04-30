@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bolos Gordos - Conteúdo</title>
+  <style>
+    #adminArea { display: none; margin-top: 20px; }
+    .post { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+    img { max-width: 200px; display: block; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Bolos Gordos</h1>
+  <div id="conteudo">
+    <!-- Os posts serão inseridos aqui -->
+  </div>
+
+  <div id="adminArea">
+    <h3>Área do administrador</h3>
+    <textarea id="texto" placeholder="Escreva algo..."></textarea><br>
+    <input type="file" id="imagem"><br>
+    <button onclick="adicionarPost()">Adicionar</button>
+  </div>
+
+  <script>
+    const user = localStorage.getItem("user");
+    const role = localStorage.getItem("role");
+
+    function adicionarPost() {
+      const texto = document.getElementById("texto").value;
+      const imagem = document.getElementById("imagem").files[0];
+
+      const div = document.createElement("div");
+      div.className = "post";
+      div.innerHTML = "<strong>" + user + ":</strong><p>" + texto + "</p>";
+
+      if (imagem) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          div.appendChild(img);
+          document.getElementById("conteudo").appendChild(div);
+        };
+        reader.readAsDataURL(imagem);
+      } else {
+        document.getElementById("conteudo").appendChild(div);
+      }
+
+      document.getElementById("texto").value = "";
+      document.getElementById("imagem").value = "";
+    }
+
+    if (role === "admin") {
+      document.getElementById("adminArea").style.display = "block";
+    }
+  </script>
+</body>
+</html>
